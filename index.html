@@ -174,7 +174,7 @@ if(typeof cloudClient==='undefined'||!cloudClient||typeof cloudUser==='undefined
 const {data:{session}}=await cloudClient.auth.getSession();if(!session?.access_token){$('finlab-ai-gemini-status').textContent='로그인이 만료됐습니다. 다시 로그인해 주세요.';return;}
 busy=true;$('finlab-ai-send').disabled=true;input.value='';bubble(question,'user');const outgoing=[...history,{role:'user',content:question}];const wait=bubble('응답 생성 중…','assistant');$('finlab-ai-gemini-status').textContent='Gemini에 질문을 보내고 있어요.';
 try{const project=window.FINLAB_CONFIG.url;const url=project+'/functions/v1/finlab-gemini-chat';
-const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':window.FINLAB_CONFIG.publishableKey},body:JSON.stringify({messages:outgoing})});const data=await res.json();if(!res.ok)throw Error(data.error||'요청 실패');
+const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':window.FINLAB_CONFIG.publishableKey},body:JSON.stringify({messages:outgoing})});const data=await res.json();if(!res.ok)throw Error([data.error||'요청 실패',data.provider_status?'HTTP '+data.provider_status:'',data.provider_code||'',data.provider_detail||''].filter(Boolean).join(' · '));
 wait.textContent=data.answer;history.push({role:'user',content:question},{role:'assistant',content:data.answer});$('finlab-ai-gemini-status').textContent='응답 완료 · 오늘 남은 요청 '+data.remaining+'회';
 }catch(err){wait.textContent='⚠ '+err.message;$('finlab-ai-gemini-status').textContent='응답에 실패했습니다.'}
 finally{busy=false;$('finlab-ai-send').disabled=false}});
