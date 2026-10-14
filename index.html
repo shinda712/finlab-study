@@ -5,7 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#17253b"/>
 <meta name="description" content="채권금리와 PER을 실험하며 공부하는 나의 금융 개념 DB"/>
-<title>FINLAB 2.0 — 나의 경제·투자 학습 플랫폼</title>
+<title>FINLAB 3.2 — 나의 경제·투자 학습 플랫폼</title>
+<link rel="manifest" href="./manifest.webmanifest?v=3.2.0">
+<link rel="icon" href="./icon.svg?v=3.2.0" type="image/svg+xml">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="FINLAB">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <style>
 :root{--bg:#f6f8fb;--paper:#fff;--ink:#152536;--muted:#68778b;--line:#e5eaf1;--blue:#335de3;--bluep:#ebf0ff;--teal:#087d76;--tealp:#e6f5f1;--orange:#b86c21;--orangep:#fff6e8;--red:#b64452;--shadow:0 12px 30px rgba(29,48,77,.055);--radius:18px}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",Arial,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:var(--blue)}
@@ -219,6 +224,54 @@ $('finlab-ai-note-save').addEventListener('click',()=>{try{const id=window.FINLA
 async function copy(){const q=$('finlab-ai-question').value.trim();if(!q){$('finlab-ai-status').textContent='질문을 입력해 주세요.';return}try{await navigator.clipboard.writeText(q);$('finlab-ai-status').textContent='복사 완료'}catch(e){$('finlab-ai-question').select();$('finlab-ai-status').textContent='Cmd+C로 복사해 주세요.'}}
 $('finlab-ai-copy').addEventListener('click',copy);$('finlab-ai-ask').addEventListener('click',()=>{window.open('https://chatgpt.com/','_blank','noopener,noreferrer');copy()});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&panel.classList.contains('open')&&!busy)sync()});
+})();
+</script>
+
+<style>
+.finlab-update-bar{position:fixed;z-index:2100;left:50%;bottom:18px;transform:translateX(-50%);background:#15253b;color:white;border-radius:14px;padding:10px 13px;box-shadow:0 14px 35px #14254155;display:flex;align-items:center;gap:10px;max-width:calc(100vw - 24px);font-size:12px}
+.finlab-update-bar button{border:0;border-radius:8px;background:#83e0d1;color:#123648;padding:8px 10px;font-weight:800;white-space:nowrap}
+.finlab-update-bar[hidden]{display:none}
+.finlab-version-chip{position:fixed;bottom:78px;left:12px;z-index:1980;background:#ffffffec;color:#38516b;border:1px solid #d4ddec;border-radius:999px;padding:5px 9px;font-size:11px;box-shadow:0 3px 12px #192b4d12}
+@media(max-width:560px){.finlab-update-bar{width:calc(100vw - 24px);justify-content:space-between;bottom:72px}.finlab-version-chip{bottom:14px;left:12px}}
+</style>
+<span class="finlab-version-chip" id="finlab-version-chip">FINLAB v3.2.0</span>
+<div id="finlab-update-bar" class="finlab-update-bar" hidden role="status" aria-live="polite">
+  <span id="finlab-update-message">🔄 새 버전이 있습니다.</span>
+  <button id="finlab-update-apply" type="button">업데이트</button>
+  <button id="finlab-update-dismiss" type="button" style="background:#384962;color:white" aria-label="알림 닫기">✕</button>
+</div>
+<script>
+(function(){
+const CURRENT_VERSION="3.2.0";
+const bar=document.getElementById("finlab-update-bar"),message=document.getElementById("finlab-update-message");
+const btn=document.getElementById("finlab-update-apply"),close=document.getElementById("finlab-update-dismiss");
+let latest=CURRENT_VERSION;
+function compare(a,b){const x=a.split(".").map(Number),y=b.split(".").map(Number);for(let i=0;i<3;i++){if((x[i]||0)!==(y[i]||0))return (x[i]||0)-(y[i]||0)}return 0}
+function reloadFresh(){
+ const url=new URL(location.href);
+ url.searchParams.set("app",latest);
+ url.searchParams.set("_refresh",Date.now().toString());
+ location.replace(url.toString());
+}
+async function check(){
+ if(!navigator.onLine)return;
+ try{
+  const response=await fetch("./version.json?_check="+Date.now(),{cache:"no-store"});
+  if(!response.ok)return;
+  const info=await response.json();
+  if(!/^\d+\.\d+\.\d+$/.test(info.version))return;
+  if(compare(info.version,CURRENT_VERSION)>0){latest=info.version;message.textContent="🔄 FINLAB "+latest+" 업데이트가 있습니다.";bar.hidden=false}
+ }catch(e){}
+}
+btn.addEventListener("click",reloadFresh);
+close.addEventListener("click",()=>{bar.hidden=true});
+document.getElementById("finlab-version-chip").addEventListener("click",()=>{message.textContent="FINLAB v"+CURRENT_VERSION+" · 최신 버전 확인 중";bar.hidden=false;latest=CURRENT_VERSION;check().then(()=>{if(latest===CURRENT_VERSION)message.textContent="현재 v"+CURRENT_VERSION+"입니다. 화면이 오래됐다면 새로고침해 주세요."})});
+window.addEventListener("pageshow",check);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")check()});
+setInterval(check,5*60*1000);
+check();
+// No service worker is installed: avoid offline-first app shell caching for a frequently updated personal site.
+if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then(rs=>{for(const reg of rs){if(reg.scope.includes("/finlab-study/"))reg.unregister()}}).catch(()=>{})}
 })();
 </script>
 </body></html>
