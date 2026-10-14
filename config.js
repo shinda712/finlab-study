@@ -1,6 +1,5 @@
-// FINLAB 2.0 public client configuration. Safe to deploy a publishable key; NEVER put a secret key here.
+// Public FINLAB client settings (publishable key, not a secret).
 window.FINLAB_CONFIG = {
-  url: "https://PROJECT_REF.supabase.co",
+  url: "https://cqxbkaxsvycgjmpniwwz.supabase.co",
   publishableKey: "sb_publishable_zAhBYa30RrIaS3xXlEGVHA_Aepyp1An"
 };
-https://github.com/shinda712/finlab-study/blob/main/config.js
