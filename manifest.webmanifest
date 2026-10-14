@@ -1,0 +1,19 @@
+{
+  "name": "FINLAB — 나의 경제·투자 학습 플랫폼",
+  "short_name": "FINLAB",
+  "description": "금융 개념, AI 대화와 인터랙티브 실험실",
+  "id": "/finlab-study/",
+  "start_url": "/finlab-study/?app=3.2.0",
+  "scope": "/finlab-study/",
+  "display": "standalone",
+  "background_color": "#f6f8fb",
+  "theme_color": "#17253b",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
