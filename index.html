@@ -128,6 +128,17 @@ function mergeLocalData(){if(!cloudUser||cloudRevision===null){cloudFeedback('�
 async function initCloud(){const cfg=window.FINLAB_CONFIG||{};const valid=typeof cfg.url==='string'&&/^https:\/\/[^\s]+\.supabase\.co$/.test(cfg.url)&&typeof cfg.publishableKey==='string'&&cfg.publishableKey.startsWith('sb_publishable_');if(!valid){cloudNotice('◌ 데모 · 기기 저장','클라우드 연결 준비 중입니다. config.js에 Supabase URL과 publishable key를 입력하면 로그인을 사용할 수 있어요.');$('email-login').querySelector('button').disabled=true;$('merge-local').disabled=true;cloudFeedback('설정이 완료되기 전에는 현재 브라우저에만 저장됩니다.');return}if(!window.supabase?.createClient){cloudNotice('⚠ 인증 라이브러리 로드 실패','외부 CDN이 차단되었거나 인터넷에 연결되지 않았습니다.','warn');$('email-login').querySelector('button').disabled=true;return}cloudClient=window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});cloudNotice('◌ 로그인 전 · 기기 저장','이메일 로그인으로 여러 기기의 학습 데이터를 동기화할 수 있어요.');cloudClient.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>applySession(session),0)});const {data,error}=await cloudClient.auth.getSession();if(error){cloudFeedback('로그인 확인 중 오류: '+error.message);return}await applySession(data.session)}
 function bindCloud(){const login=$('email-login');login.addEventListener('submit',async(e)=>{e.preventDefault();if(!cloudClient){cloudFeedback('클라우드 설정을 먼저 완료하세요.');return}if(location.protocol==='file:'){cloudFeedback('이메일 인증은 HTTPS로 배포한 웹사이트에서 사용해 주세요.');return}const email=$('cloud-email').value.trim();cloudFeedback('인증 메일을 보내는 중...');const redirect=location.origin+location.pathname;const {error}=await cloudClient.auth.signInWithOtp({email,options:{emailRedirectTo:redirect}});cloudFeedback(error?'로그인 이메일 발송 실패: '+error.message:'인증 메일을 보냈습니다. 메일의 링크를 같은 브라우저에서 열어 주세요.')});$('merge-local').addEventListener('click',mergeLocalData);$('reload-cloud').addEventListener('click',async()=>{if(!confirm('클라우드 최신 상태로 다시 불러올까요? 동기화되지 않은 기기 수정 사항은 사라질 수 있으니 JSON을 먼저 백업하세요.'))return;let draft;try{draft=JSON.parse(localStorage.getItem('finlab_pending_draft_v2')||'null')||JSON.parse(JSON.stringify(db))}catch(_){draft=JSON.parse(JSON.stringify(db))}localBeforeLogin=draft;cloudWritePending=false;cloudConflict=false;await loadCloudWorkspace()});$('logout-btn').addEventListener('click',async()=>{if(!confirm('로그아웃하면 이 기기의 학습 자료는 초기 상태로 바뀝니다. 클라우드 데이터는 남습니다. 진행할까요?'))return;cloudWritePending=false;clearTimeout(cloudTimer);const {error}=await cloudClient.auth.signOut();if(error){cloudFeedback('로그아웃 오류: '+error.message);return}cloudUser=null;cloudRevision=null;localBeforeLogin=null;db=normalizeDb(INITIAL_DB);try{localStorage.removeItem(KEY);localStorage.removeItem('finlab_pending_cloud_v2')}catch(_){}renderCards();switchView('home');cloudFeedback('로그아웃했습니다. 이 기기의 개인 메모는 화면에서 초기화되었습니다.')});window.addEventListener('online',()=>{if(cloudWritePending&&!cloudConflict)queueCloudWrite()});document.addEventListener('visibilitychange',async()=>{if(document.visibilityState!=='visible'||!cloudUser||cloudLoading||cloudWriteBusy||cloudWritePending||cloudConflict)return;try{const remote=await getRemoteWorkspace();if(remote&&Number(remote.revision)>cloudRevision){if(activeView==='detail'){cloudNotice('↻ 다른 기기에 새 기록','클라우드에 새 기록이 있습니다. 작성 중인 메모를 먼저 저장한 뒤 동기화 화면에서 새로 불러오세요.','warn');return}db=normalizeDb(remote.payload);cloudRevision=Number(remote.revision);try{localStorage.setItem(KEY,JSON.stringify(db))}catch(_){}renderCards();cloudNotice('✓ 다른 기기 변경 반영','다른 기기에서 저장한 변경이 적용되었습니다.','ok')}}catch(_){}})}
 
+window.FINLAB_saveAIConcept=function(item){
+ if(!cloudUser||cloudRevision===null)throw Error('클라우드 동기화가 완료된 후 저장해 주세요.');
+ if(cloudConflict)throw Error('동기화 충돌을 해결한 후 저장해 주세요.');
+ const title=String(item.title||'').trim(),body=String(item.body||'').trim();
+ if(!title||!body)throw Error('제목과 내용을 모두 입력해 주세요.');
+ const c={id:'ai-'+Date.now()+'-'+Math.random().toString(36).slice(2,9),title:title.slice(0,140),summary:body.slice(0,150),category:'AI 학습노트',level:'AI 정리 · 검토 필요',date:new Date().toISOString().slice(0,10),tags:['Gemini','AI 학습'],key_takeaway:body.slice(0,200),sections:[{heading:'AI 설명 · 사실관계 확인 필요',paragraphs:[body.slice(0,11000)]}],labIds:[]};
+ db.concepts.unshift(c);
+ if(!save()){db.concepts.shift();throw Error('기기 저장이 실패했습니다.');}
+ renderCards();
+ return c.id;
+};
 initData();bind();bindCloud();renderCards();initCloud();if(!storageReady)alert('이 브라우저 환경에서는 자동 저장이 제한될 수 있습니다. 중요한 메모는 JSON으로 백업하세요.');
 </script>
 
@@ -145,12 +156,13 @@ initData();bind();bindCloud();renderCards();initCloud();if(!storageReady)alert('
 <div class="finlab-ai-head"><strong>💬 FINLAB AI 튜터</strong><button id="finlab-ai-close" type="button">✕ 닫기</button></div>
 <div class="finlab-ai-tabs"><button id="finlab-ai-tab-gemini" class="active" type="button">✨ Gemini 무료 채팅</button><button id="finlab-ai-tab-chatgpt" type="button">ChatGPT 연결</button></div>
 <div id="finlab-ai-gemini" class="finlab-ai-body">
+<div class="finlab-ai-actions" style="margin:0 0 9px"><select id="finlab-ai-thread" aria-label="이전 대화 선택" style="flex:1;min-width:0;border:1px solid #d8e2ee;border-radius:8px;padding:7px"><option value="">새 대화</option></select><button id="finlab-ai-new" type="button">+ 새 대화</button></div>
 <div id="finlab-ai-messages" class="finlab-ai-messages" role="log" aria-live="polite"><div class="finlab-ai-bubble">안녕하세요! 금융 개념, 금리·PER·DCF 등을 질문해 주세요. 로그인 후 이용할 수 있습니다. (하루 최대 25회)</div></div>
 <label for="finlab-ai-input" class="finlab-ai-hint">질문 입력</label>
 <textarea id="finlab-ai-input" placeholder="예: 실질금리가 오르면 성장주 PER은 왜 하락할까?"></textarea>
-<div class="finlab-ai-actions"><button class="primary" id="finlab-ai-send" type="button">질문 보내기 →</button><button id="finlab-ai-clear" type="button">대화 지우기</button></div>
+<div class="finlab-ai-actions"><button class="primary" id="finlab-ai-send" type="button">질문 보내기 →</button><button id="finlab-ai-refresh" type="button">↻ 대화 불러오기</button><button id="finlab-ai-clear" type="button">현재 대화 삭제</button></div>
 <p id="finlab-ai-gemini-status" class="finlab-ai-status"></p>
-<p class="finlab-ai-hint">Gemini 대화는 현재 이 브라우저 창에서만 유지됩니다. AI 답변은 검증 후 FINLAB 개념 DB에 직접 등록해 주세요. API 키는 서버에서 보관됩니다.</p>
+<p class="finlab-ai-hint">Gemini 대화는 Supabase에 자동 저장되며 같은 계정으로 기기간 불러올 수 있습니다. AI 답변은 검토 후 직접 승인해 학습 DB에 등록합니다.</p>
 </div>
 <div id="finlab-ai-chatgpt" class="finlab-ai-body finlab-ai-hidden">
 <p class="finlab-ai-hint">질문을 복사한 뒤 기존 ChatGPT에서 이어서 대화할 수 있습니다.</p>
@@ -159,28 +171,54 @@ initData();bind();bindCloud();renderCards();initCloud();if(!storageReady)alert('
 <p id="finlab-ai-status" class="finlab-ai-status"></p>
 </div>
 </aside>
+<div id="finlab-ai-save-dialog" class="finlab-ai-panel" style="z-index:2100;bottom:90px;height:auto;max-height:80dvh;overflow:auto;padding:18px;display:none" role="dialog" aria-modal="true" aria-label="AI 학습노트 저장"><h3 style="margin:0 0 8px">📚 AI 답변을 학습 DB에 저장</h3><p class="finlab-ai-hint">제목과 본문을 검토·수정한 뒤 저장해 주세요. AI 답변은 오류가 있을 수 있어요.</p><label for="finlab-ai-note-title">제목</label><input id="finlab-ai-note-title" style="width:100%;padding:9px;border:1px solid #d8e2ee;border-radius:8px" maxlength="140"/><label for="finlab-ai-note-body">내용</label><textarea id="finlab-ai-note-body" style="min-height:190px"></textarea><div class="finlab-ai-actions"><button class="primary" id="finlab-ai-note-save" type="button">검토 완료 · 저장</button><button id="finlab-ai-note-cancel" type="button">취소</button></div><p id="finlab-ai-note-status" class="finlab-ai-status"></p></div>
 <script>
 (function(){
 const $=id=>document.getElementById(id);
-const panel=$('finlab-ai-panel'),toggle=$('finlab-ai-toggle'),chat=$('finlab-ai-messages'),input=$('finlab-ai-input');let busy=false;const history=[];
-function show(open){panel.classList.toggle('open',open);toggle.setAttribute('aria-expanded',String(open));if(open)input.focus()}
-toggle.addEventListener('click',()=>show(!panel.classList.contains('open')));$('finlab-ai-close').addEventListener('click',()=>show(false));
+const panel=$('finlab-ai-panel'),toggle=$('finlab-ai-toggle'),chat=$('finlab-ai-messages'),input=$('finlab-ai-input'),selector=$('finlab-ai-thread'),dialog=$('finlab-ai-save-dialog');
+let busy=false,threadId=null,history=[],currentUid=null,requestVersion=0;
+const status=$('finlab-ai-gemini-status');
+function show(open){panel.classList.toggle('open',open);toggle.setAttribute('aria-expanded',String(open));if(open)input.focus();else dialog.style.display='none'}
+toggle.addEventListener('click',()=>{show(!panel.classList.contains('open'));if(panel.classList.contains('open'))sync()});
+$('finlab-ai-close').addEventListener('click',()=>show(false));
 function tab(type){$('finlab-ai-gemini').classList.toggle('finlab-ai-hidden',type!=='gemini');$('finlab-ai-chatgpt').classList.toggle('finlab-ai-hidden',type!=='chatgpt');$('finlab-ai-tab-gemini').classList.toggle('active',type==='gemini');$('finlab-ai-tab-chatgpt').classList.toggle('active',type==='chatgpt')}
 $('finlab-ai-tab-gemini').addEventListener('click',()=>tab('gemini'));$('finlab-ai-tab-chatgpt').addEventListener('click',()=>tab('chatgpt'));
-function bubble(content,role){const div=document.createElement('div');div.className='finlab-ai-bubble'+(role==='user'?' user':'');div.textContent=content;chat.appendChild(div);chat.scrollTop=chat.scrollHeight;return div}
-$('finlab-ai-clear').addEventListener('click',()=>{history.length=0;chat.innerHTML='';bubble('새로운 대화를 시작해 주세요.','assistant');$('finlab-ai-gemini-status').textContent='현재 창의 대화가 초기화됐어요.'});
-$('finlab-ai-send').addEventListener('click',async()=>{if(busy)return;const question=input.value.trim();if(!question)return;
-if(typeof cloudClient==='undefined'||!cloudClient||typeof cloudUser==='undefined'||!cloudUser){$('finlab-ai-gemini-status').textContent='FINLAB 클라우드 메뉴에서 먼저 로그인해 주세요.';return;}
-const {data:{session}}=await cloudClient.auth.getSession();if(!session?.access_token){$('finlab-ai-gemini-status').textContent='로그인이 만료됐습니다. 다시 로그인해 주세요.';return;}
-busy=true;$('finlab-ai-send').disabled=true;input.value='';bubble(question,'user');const outgoing=[...history,{role:'user',content:question}];const wait=bubble('응답 생성 중…','assistant');$('finlab-ai-gemini-status').textContent='Gemini에 질문을 보내고 있어요.';
-try{const project=window.FINLAB_CONFIG.url;const url=project+'/functions/v1/finlab-gemini-chat';
-const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':window.FINLAB_CONFIG.publishableKey},body:JSON.stringify({messages:outgoing})});const data=await res.json();if(!res.ok)throw Error([data.error||'요청 실패',data.provider_status?'HTTP '+data.provider_status:'',data.provider_code||'',data.provider_detail||''].filter(Boolean).join(' · '));
-wait.textContent=data.answer;history.push({role:'user',content:question},{role:'assistant',content:data.answer});$('finlab-ai-gemini-status').textContent='응답 완료 · 오늘 남은 요청 '+data.remaining+'회';
-}catch(err){wait.textContent='⚠ '+err.message;$('finlab-ai-gemini-status').textContent='응답에 실패했습니다.'}
-finally{busy=false;$('finlab-ai-send').disabled=false}});
-input.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){$('finlab-ai-send').click()}});
-async function copy(){const q=$('finlab-ai-question').value.trim();if(!q){$('finlab-ai-status').textContent='질문을 입력해 주세요.';return}try{await navigator.clipboard.writeText(q);$('finlab-ai-status').textContent='복사 완료. ChatGPT에 붙여넣어 주세요.'}catch(e){$('finlab-ai-question').select();$('finlab-ai-status').textContent='텍스트를 선택했어요. Cmd+C로 복사해 주세요.'}}
+function bubble(content,role,saveable){const div=document.createElement('div');div.className='finlab-ai-bubble'+(role==='user'?' user':'');div.textContent=content;chat.appendChild(div);if(saveable){const b=document.createElement('button');b.type='button';b.textContent='📚 학습 노트로 저장';b.style.cssText='display:block;margin-top:8px;padding:6px;border:0;border-radius:7px;background:#dce8ff;color:#244a99;cursor:pointer';b.addEventListener('click',()=>openSave(content));div.appendChild(b)}chat.scrollTop=chat.scrollHeight;return div}
+function reset(){history=[];chat.innerHTML='';bubble('새 질문을 입력해 주세요.','assistant')}
+function user(){return typeof cloudUser!=='undefined'&&cloudUser?.id?cloudUser:null}
+function client(){return typeof cloudClient!=='undefined'?cloudClient:null}
+async function loadThread(id){if(busy)return;const v=++requestVersion;threadId=id||null;reset();if(!threadId)return;const u=user();if(!u||!client())return;
+const {data,error}=await client().from('finlab_ai_messages').select('role,content,created_at,id').eq('user_id',u.id).eq('conversation_id',threadId).order('created_at',{ascending:true}).order('id',{ascending:true}).limit(300);
+if(v!==requestVersion)return;if(error){status.textContent='기록 불러오기 오류: '+error.message;return}
+chat.innerHTML='';history=(data||[]).map(x=>({role:x.role,content:x.content}));history.forEach(m=>bubble(m.content,m.role,m.role==='assistant'));if(!history.length)reset();status.textContent='대화 기록 '+history.length+'개 불러옴';
+}
+async function sync(){const u=user();if(!u||!client()){status.textContent='FINLAB 클라우드에 먼저 로그인해 주세요.';return}if(currentUid!==u.id){currentUid=u.id;threadId=null;reset()}
+const {data,error}=await client().from('finlab_ai_messages').select('conversation_id,role,content,created_at').eq('user_id',u.id).order('created_at',{ascending:false}).limit(600);
+if(error){status.textContent='대화 목록 불러오기 오류: '+error.message;return}
+const seen=new Map();for(const row of data||[]){if(!seen.has(row.conversation_id))seen.set(row.conversation_id,{date:row.created_at,title:row.content.slice(0,34)});else if(row.role==='user')seen.get(row.conversation_id).title=row.content.slice(0,34)}
+selector.innerHTML='<option value="">+ 새 대화</option>';for(const [id,item] of seen){const o=document.createElement('option');o.value=id;o.textContent=(item.title||'이전 대화')+' · '+new Date(item.date).toLocaleDateString('ko-KR');selector.appendChild(o)}
+if(threadId&&seen.has(threadId)){selector.value=threadId;await loadThread(threadId)}else if(!threadId&&seen.size){const latest=[...seen.keys()][0];selector.value=latest;await loadThread(latest)}else{threadId=null;selector.value='';reset()}
+}
+selector.addEventListener('change',()=>loadThread(selector.value));
+$('finlab-ai-new').addEventListener('click',()=>{requestVersion++;threadId=null;selector.value='';reset();status.textContent='새 대화를 시작합니다.'});
+$('finlab-ai-refresh').addEventListener('click',sync);
+$('finlab-ai-clear').addEventListener('click',async()=>{if(busy||!threadId||!user())return;if(!confirm('선택한 대화 전체를 클라우드에서 삭제할까요? 복구할 수 없습니다.'))return;const {error}=await client().from('finlab_ai_messages').delete().eq('user_id',user().id).eq('conversation_id',threadId);if(error){status.textContent=error.message;return}threadId=null;await sync();status.textContent='대화를 삭제했습니다.'});
+$('finlab-ai-send').addEventListener('click',async()=>{if(busy)return;const q=input.value.trim();if(!q)return;const u=user(),c=client();if(!u||!c){status.textContent='클라우드 메뉴에서 로그인해 주세요.';return}const {data:{session}}=await c.auth.getSession();if(!session?.access_token){status.textContent='로그인을 갱신해 주세요.';return}
+busy=true;$('finlab-ai-send').disabled=true;input.value='';bubble(q,'user');const outgoing=[...history,{role:'user',content:q}],loading=bubble('답변 생성 중…','assistant');const id=threadId||crypto.randomUUID();status.textContent='Gemini에 질문 중…';
+try{const res=await fetch(window.FINLAB_CONFIG.url+'/functions/v1/finlab-gemini-chat',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.access_token,apikey:window.FINLAB_CONFIG.publishableKey},body:JSON.stringify({messages:outgoing.slice(-12)})});const data=await res.json();if(!res.ok)throw Error([data.error||'요청 실패',data.provider_code||'',data.provider_detail||''].filter(Boolean).join(' · '));
+loading.textContent=data.answer;const b=document.createElement('button');b.type='button';b.textContent='📚 학습 노트로 저장';b.style.cssText='display:block;margin-top:8px;padding:6px;border:0;border-radius:7px;background:#dce8ff;color:#244a99;cursor:pointer';b.addEventListener('click',()=>openSave(data.answer));loading.appendChild(b);
+history.push({role:'user',content:q},{role:'assistant',content:data.answer});threadId=id;
+const {error}=await c.from('finlab_ai_messages').insert([{user_id:u.id,conversation_id:id,role:'user',content:q.slice(0,12000)},{user_id:u.id,conversation_id:id,role:'assistant',content:data.answer.slice(0,12000)}]);status.textContent=error?'AI 응답 완료, ⚠ 대화 저장 실패: '+error.message:'답변 완료 · 대화 자동 저장됨 · 남은 질문 '+data.remaining+'회';
+if(!error){const option=document.createElement('option');option.value=id;option.textContent=q.slice(0,34);if(!Array.from(selector.options).some(o=>o.value===id))selector.appendChild(option);selector.value=id}
+}catch(e){loading.textContent='⚠ '+e.message;status.textContent='응답 실패. 질문을 다시 입력해 주세요.';input.value=q;}finally{busy=false;$('finlab-ai-send').disabled=false}
+});
+input.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey))$('finlab-ai-send').click()});
+function openSave(body){dialog.style.display='block';$('finlab-ai-note-title').value=(history.filter(m=>m.role==='user').slice(-1)[0]?.content||'AI 학습노트').slice(0,140);$('finlab-ai-note-body').value=body;$('finlab-ai-note-status').textContent='';}
+$('finlab-ai-note-cancel').addEventListener('click',()=>dialog.style.display='none');
+$('finlab-ai-note-save').addEventListener('click',()=>{try{const id=window.FINLAB_saveAIConcept({title:$('finlab-ai-note-title').value,body:$('finlab-ai-note-body').value});$('finlab-ai-note-status').textContent='✅ 학습 DB에 추가했어요. FINLAB 클라우드 동기화 완료 표시를 확인해 주세요.';setTimeout(()=>dialog.style.display='none',1700)}catch(e){$('finlab-ai-note-status').textContent='⚠ '+e.message}});
+async function copy(){const q=$('finlab-ai-question').value.trim();if(!q){$('finlab-ai-status').textContent='질문을 입력해 주세요.';return}try{await navigator.clipboard.writeText(q);$('finlab-ai-status').textContent='복사 완료'}catch(e){$('finlab-ai-question').select();$('finlab-ai-status').textContent='Cmd+C로 복사해 주세요.'}}
 $('finlab-ai-copy').addEventListener('click',copy);$('finlab-ai-ask').addEventListener('click',()=>{window.open('https://chatgpt.com/','_blank','noopener,noreferrer');copy()});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&panel.classList.contains('open')&&!busy)sync()});
 })();
 </script>
 </body></html>
