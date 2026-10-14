@@ -130,4 +130,47 @@ function bindCloud(){const login=$('email-login');login.addEventListener('submit
 
 initData();bind();bindCloud();renderCards();initCloud();if(!storageReady)alert('이 브라우저 환경에서는 자동 저장이 제한될 수 있습니다. 중요한 메모는 JSON으로 백업하세요.');
 </script>
+
+<style>
+.finlab-ai-toggle{position:fixed;right:22px;bottom:22px;z-index:2000;border:0;background:#274fe0;color:#fff;padding:14px 18px;border-radius:999px;box-shadow:0 12px 28px #1e3a8a45;font-weight:800}
+.finlab-ai-panel{position:fixed;right:20px;bottom:82px;z-index:2000;width:min(380px,calc(100vw - 30px));padding:20px;background:#fff;color:#182a41;border:1px solid #dce5f4;border-radius:18px;box-shadow:0 24px 65px #15253b3b;display:none}
+.finlab-ai-panel.open{display:block}
+.finlab-ai-panel h2{font-size:18px;margin:0 0 5px}
+.finlab-ai-panel p{font-size:12px;line-height:1.6;color:#63758b;margin:4px 0 12px}
+.finlab-ai-panel textarea{width:100%;min-height:108px;resize:vertical;border:1px solid #dbe4f1;border-radius:10px;padding:10px;font-size:14px}
+.finlab-ai-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.finlab-ai-actions button,.finlab-ai-actions a{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:10px;padding:10px 12px;font-size:12px;font-weight:750;text-decoration:none;background:#eaf0ff;color:#264bc3}
+.finlab-ai-actions .primary{background:#335de3;color:#fff}
+.finlab-ai-hint{font-size:11px!important;margin-top:12px!important}
+@media(max-width:560px){.finlab-ai-toggle{bottom:16px;right:14px}.finlab-ai-panel{bottom:73px;right:12px}}
+</style>
+<button id="finlab-ai-toggle" class="finlab-ai-toggle" type="button" aria-expanded="false" aria-controls="finlab-ai-panel">💬 AI에게 질문</button>
+<aside class="finlab-ai-panel" id="finlab-ai-panel" aria-label="ChatGPT 학습 도우미">
+  <h2>💬 FINLAB 학습 도우미</h2>
+  <p>질문을 복사한 후 ChatGPT에서 이어서 공부해 보세요. 현재는 별도 창으로 열리는 무료 연결 방식입니다.</p>
+  <label for="finlab-ai-question" style="font-size:12px;font-weight:750">무엇을 공부하고 싶나요?</label>
+  <textarea id="finlab-ai-question" placeholder="예: 미국 10년물 국채 금리가 1%p 상승하면 성장주 PER에 어떤 영향을 미쳐? 슬라이더 계산기 아이디어도 제안해줘."></textarea>
+  <div class="finlab-ai-actions">
+    <button class="primary" id="finlab-ai-ask" type="button">질문 복사 + ChatGPT 열기 ↗</button>
+    <button id="finlab-ai-copy" type="button">질문만 복사</button>
+    <button id="finlab-ai-close" type="button">닫기</button>
+  </div>
+  <p id="finlab-ai-status" aria-live="polite" style="color:#1a6f68"></p>
+  <p class="finlab-ai-hint">ChatGPT 답변을 공부 자료로 정리한 뒤, FINLAB의 ‘추가 · 백업’에서 개념을 등록할 수 있습니다. 이 단계는 자동 동기화나 자동 등록이 아닙니다.</p>
+</aside>
+<script>
+(function(){
+const toggle=document.getElementById('finlab-ai-toggle'), panel=document.getElementById('finlab-ai-panel');
+const input=document.getElementById('finlab-ai-question'), status=document.getElementById('finlab-ai-status');
+function show(open){panel.classList.toggle('open',open);toggle.setAttribute('aria-expanded',String(open));if(open)input.focus();}
+async function copy(){const q=input.value.trim();if(!q){status.textContent='질문을 먼저 입력해 주세요.';return false;}
+try{await navigator.clipboard.writeText(q);status.textContent='질문을 복사했어요. ChatGPT 채팅창에 붙여넣어 주세요.';return true;}catch(e){
+input.focus();input.select();status.textContent='자동 복사가 차단됐어요. 선택된 내용을 직접 복사(Cmd+C)해 주세요.';return false;}}
+toggle.addEventListener('click',()=>show(!panel.classList.contains('open')));
+document.getElementById('finlab-ai-close').addEventListener('click',()=>show(false));
+document.getElementById('finlab-ai-copy').addEventListener('click',copy);
+document.getElementById('finlab-ai-ask').addEventListener('click',()=>{window.open('https://chatgpt.com/','_blank','noopener,noreferrer');copy();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('open'))show(false)});
+})();
+</script>
 </body></html>
