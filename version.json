@@ -1,5 +1,5 @@
 {
-  "version": "3.2.0",
-  "build": "2026-10-14-pwa-1",
-  "releaseNotes": "홈 화면 앱 최적화 · 버전 확인 · 새 버전 알림"
+  "version": "3.2.1",
+  "build": "2026-10-14-password-login",
+  "releaseNotes": "이메일 인증 한도 초과 대응 · 비밀번호 로그인 추가"
 }
