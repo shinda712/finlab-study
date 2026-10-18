@@ -1,5 +1,5 @@
 {
-  "version": "3.2.1",
-  "build": "2026-10-14-password-login",
-  "releaseNotes": "이메일 인증 한도 초과 대응 · 비밀번호 로그인 추가"
+  "version": "3.2.2",
+  "build": "2026-10-18-bitcoin-treasury",
+  "releaseNotes": "BTC 트레저리·mNAV·워런트 학습 노트 추가"
 }
