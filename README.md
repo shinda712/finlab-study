@@ -9,7 +9,7 @@ GitHub Pages 기반의 개인 경제·투자 학습 웹앱. 금융 개념을 읽
 - 코드: GitHub `shinda712/finlab-study` (`main` 브랜치, Pages)
 - 백엔드: Supabase 프로젝트 `cqxbkaxsvycgjmpniwwz` (서울)
 - 대상 기기: iPhone 홈 화면 앱 + Mac Safari
-- 현재 문서화된 버전: **FINLAB 3.3.1** (실제 코드/배포 버전 우선 확인)
+- 현재 문서화된 버전: **FINLAB 3.3.2** (실제 코드/배포 버전 우선 확인)
 
 ## 현재 기능
 - 비트코인 트레저리·mNAV(Multiple of Net Asset Value)·워런트 심화 노트
@@ -22,6 +22,30 @@ GitHub Pages 기반의 개인 경제·투자 학습 웹앱. 금융 개념을 읽
 - AI 학습노트 저장 시 Gemini가 제목·요약·핵심 결론·관련 섹션을 JSON으로 구조화하고 저장 전 사용자가 편집·승인
 - 구조화에는 추가 AI 요청 1회가 사용되며, 실패 시 원문 기반 임시 초안을 제공
 - 경제·투자 분야는 자동 추천 후 사용자가 직접 변경 가능; AI가 정리한 사실·수치·출처는 저장 전에 확인 필요
+- 학습노트 본문과 수식 필드의 LaTeX 표기(예: `\\(x\\)`, `\\[x\\]`, `$x# FINLAB — 개인 금융 학습 실험실
+
+**FINLAB = FINance + LABoratory**
+
+GitHub Pages 기반의 개인 경제·투자 학습 웹앱. 금융 개념을 읽는 데 그치지 않고 슬라이더/계산기로 가정을 바꿔 실험하고, Gemini AI와의 대화에서 얻은 내용을 학습 DB에 축적한다.
+
+## 운영 환경
+- 웹: https://shinda712.github.io/finlab-study/
+- 코드: GitHub `shinda712/finlab-study` (`main` 브랜치, Pages)
+- 백엔드: Supabase 프로젝트 `cqxbkaxsvycgjmpniwwz` (서울)
+- 대상 기기: iPhone 홈 화면 앱 + Mac Safari
+- 현재 문서화된 버전: **FINLAB 3.3.2** (실제 코드/배포 버전 우선 확인)
+
+## 현재 기능
+- 비트코인 트레저리·mNAV(Multiple of Net Asset Value)·워런트 심화 노트
+- 경제 개념 라이브러리, 검색, 사용자 메모, 즐겨찾기 및 학습 완료 표시
+- 인터랙티브 계산기: 현재가치/할인율, PER·이익수익률, 고든 성장모형, EPS×PER
+- Supabase Auth: 이메일 링크 및 이메일·비밀번호 로그인
+- Supabase 기반 학습 기록 및 실험 시나리오 동기화
+- Gemini AI 채팅(Supabase Edge Function), 대화 기록 저장·기기간 불러오기
+- AI 답변을 학습노트로 저장할 때 경제·투자 카테고리 자동 추천 및 저장 전 직접 선택 (규칙 기반 키워드 분류)
+- AI 학습노트 저장 시 Gemini가 제목·요약·핵심 결론·관련 섹션을 JSON으로 구조화하고 저장 전 사용자가 편집·승인
+- 구조화에는 추가 AI 요청 1회가 사용되며, 실패 시 원문 기반 임시 초안을 제공
+, `$x$`)를 MathJax로 시각화
 - 홈 화면 설치용 manifest, 버전 확인/업데이트 알림
 
 ## 주요 파일
