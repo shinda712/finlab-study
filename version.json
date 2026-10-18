@@ -1,5 +1,5 @@
 {
-  "version": "3.3.1",
-  "build": "2026-10-19-ai-learning-note-structured-save",
-  "releaseNotes": "AI 학습노트 제목·요약·핵심 결론·섹션 자동 생성 및 저장 전 편집"
+  "version": "3.3.2",
+  "build": "2026-10-19-mathjax-formula-rendering",
+  "releaseNotes": "학습노트 본문 및 수식 필드의 LaTeX 수식 렌더링 지원"
 }
