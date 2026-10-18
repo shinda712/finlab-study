@@ -1,5 +1,5 @@
 {
-  "version": "3.3.0",
-  "build": "2026-10-19-finance-category-recommendation",
-  "releaseNotes": "AI 학습노트 저장 시 경제·투자 카테고리 자동 추천 및 사용자 선택 추가"
+  "version": "3.2.4",
+  "build": "2026-10-19-fix-undefined-lab-labels",
+  "releaseNotes": "트레저리·BTC Yield·워런트 관련 실험 링크의 Undefined 표시 수정"
 }
