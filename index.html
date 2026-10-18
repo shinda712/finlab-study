@@ -311,7 +311,7 @@ function recommendFinanceCategory(title,body){
 }
 let categoryWasManuallyChanged=false;
 function refreshRecommendedCategory(){
- const result=recommendFinanceCategory($('finlab-ai-note-title').value,$('finlab-ai-note-body').value);
+ const result=recommendFinanceCategory($('finlab-ai-note-title').value,($('finlab-ai-note-summary').value||$('finlab-ai-note-body').value)+' '+$('finlab-ai-note-takeaway').value);
  if(!categoryWasManuallyChanged)$('finlab-ai-note-category').value=result.category;
  $('finlab-ai-category-hint').textContent=categoryWasManuallyChanged?'직접 선택한 분야를 유지하고 있어요.':'자동 추천: '+result.reason;
 }
@@ -368,7 +368,7 @@ function applyStructuredDraft(d,originalTitle){
  if(!takeawayManual)$('finlab-ai-note-takeaway').value=d.key_takeaway;
  if(!sourceNoteManual)$('finlab-ai-note-source').value=d.source_note;
  if(!categoryManual){
-  const local=recommendFinanceCategory($('finlab-ai-note-title').value,$('finlab-ai-note-body').value);
+  const local=recommendFinanceCategory(d.title||$('finlab-ai-note-title').value,(d.summary||'')+' '+(d.key_takeaway||''));
   $('finlab-ai-note-category').value=local.category!=='경제 기초용어'?local.category:(d.category||local.category);
   $('finlab-ai-category-hint').textContent='AI 구조화 초안 · 자동 추천 분야: '+$('finlab-ai-note-category').value+' (저장 전 변경 가능)';
  }
