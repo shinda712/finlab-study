@@ -1,5 +1,5 @@
 {
-  "version": "3.2.2",
-  "build": "2026-10-18-bitcoin-treasury",
-  "releaseNotes": "BTC 트레저리·mNAV·워런트 학습 노트 추가"
+  "version": "3.3.0",
+  "build": "2026-10-18-ai-structured-notes",
+  "releaseNotes": "AI 학습노트 자동 분류, 저장 전 섹션별 미리보기 및 편집"
 }
