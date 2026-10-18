@@ -3,7 +3,7 @@
   "short_name": "FINLAB",
   "description": "금융 개념, AI 대화와 인터랙티브 실험실",
   "id": "/finlab-study/",
-  "start_url": "/finlab-study/?app=3.2.0",
+  "start_url": "/finlab-study/?app=3.3.3",
   "scope": "/finlab-study/",
   "display": "standalone",
   "background_color": "#f6f8fb",
