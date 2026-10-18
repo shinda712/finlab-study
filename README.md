@@ -2,78 +2,45 @@
 
 **FINLAB = FINance + LABoratory**
 
-GitHub Pages 기반의 개인 경제·투자 학습 웹앱. 금융 개념을 읽는 데 그치지 않고 슬라이더/계산기로 가정을 바꿔 실험하고, Gemini AI와의 대화에서 얻은 내용을 학습 DB에 축적한다.
+GitHub Pages 기반의 개인 경제·투자 학습 웹앱이다. 목표는 개념을 텍스트로 저장하는 데 그치지 않고, 사용자가 수식과 입력값을 직접 조작하며 경제·투자 원리를 이해하도록 돕는 것이다.
 
 ## 운영 환경
 - 웹: https://shinda712.github.io/finlab-study/
 - 코드: GitHub `shinda712/finlab-study` (`main` 브랜치, Pages)
-- 백엔드: Supabase 프로젝트 `cqxbkaxsvycgjmpniwwz` (서울)
+- 백엔드: Supabase 프로젝트 `cqxbkaxsvycgjmpniwwz`
 - 대상 기기: iPhone 홈 화면 앱 + Mac Safari
-- 현재 문서화된 버전: **FINLAB 3.3.2** (실제 코드/배포 버전 우선 확인)
+- 문서 기준 버전: **FINLAB 3.3.2** (실제 배포 상태는 별도 검증)
+
+## 핵심 학습 설계 원칙
+**개념 설명 → 시각적 수식 → 단계별 계산 → 직접 조작하는 실험 → 결과 해석 → 실제 투자 적용**
+
+수식의 의미, 대입값, 중간 계산, 최종 결과를 하나의 흐름으로 연결한다. 입력값을 바꾸면 수식과 계산 결과, 시각화, 설명이 함께 갱신되도록 한다. 모든 개념에 무조건 계산기를 붙이는 것은 아니다. 정량적 관계가 핵심인 주제는 계산기와 슬라이더를, 그렇지 않은 주제는 비교표·관계도 등 적절한 시각화를 사용한다. 투자 해석에는 가정과 한계를 명시한다.
+
+**다음 개발 우선순위: PEG 학습노트와 PEG 계산 실험 연결.** 전용 PEG 계산기가 없다면 PER과 예상 EPS 성장률을 입력으로 하는 계산기를 만들고, 수식·대입·계산 과정·결과·주의사항을 한 흐름으로 제공한다.
 
 ## 현재 기능
-- 비트코인 트레저리·mNAV(Multiple of Net Asset Value)·워런트 심화 노트
 - 경제 개념 라이브러리, 검색, 사용자 메모, 즐겨찾기 및 학습 완료 표시
-- 인터랙티브 계산기: 현재가치/할인율, PER·이익수익률, 고든 성장모형, EPS×PER
-- Supabase Auth: 이메일 링크 및 이메일·비밀번호 로그인
-- Supabase 기반 학습 기록 및 실험 시나리오 동기화
-- Gemini AI 채팅(Supabase Edge Function), 대화 기록 저장·기기간 불러오기
-- AI 답변을 학습노트로 저장할 때 경제·투자 카테고리 자동 추천 및 저장 전 직접 선택 (규칙 기반 키워드 분류)
-- AI 학습노트 저장 시 Gemini가 제목·요약·핵심 결론·관련 섹션을 JSON으로 구조화하고 저장 전 사용자가 편집·승인
-- 구조화에는 추가 AI 요청 1회가 사용되며, 실패 시 원문 기반 임시 초안을 제공
-- 경제·투자 분야는 자동 추천 후 사용자가 직접 변경 가능; AI가 정리한 사실·수치·출처는 저장 전에 확인 필요
-- 학습노트 본문과 수식 필드의 LaTeX 표기(예: `\\(x\\)`, `\\[x\\]`, `$x# FINLAB — 개인 금융 학습 실험실
+- 현재가치/할인율, 이익수익률, 고든 성장모형, EPS×PER 등 인터랙티브 계산 실험
+- Supabase 인증 및 사용자별 학습 기록 동기화
+- Gemini AI 채팅 및 대화 이력 저장
+- AI 학습노트의 제목·요약·핵심 결론·섹션 구조화, 카테고리 추천, 저장 전 편집·승인
+- MathJax 기반 LaTeX 수식 렌더링
 
-**FINLAB = FINance + LABoratory**
-
-GitHub Pages 기반의 개인 경제·투자 학습 웹앱. 금융 개념을 읽는 데 그치지 않고 슬라이더/계산기로 가정을 바꿔 실험하고, Gemini AI와의 대화에서 얻은 내용을 학습 DB에 축적한다.
-
-## 운영 환경
-- 웹: https://shinda712.github.io/finlab-study/
-- 코드: GitHub `shinda712/finlab-study` (`main` 브랜치, Pages)
-- 백엔드: Supabase 프로젝트 `cqxbkaxsvycgjmpniwwz` (서울)
-- 대상 기기: iPhone 홈 화면 앱 + Mac Safari
-- 현재 문서화된 버전: **FINLAB 3.3.2** (실제 코드/배포 버전 우선 확인)
-
-## 현재 기능
-- 비트코인 트레저리·mNAV(Multiple of Net Asset Value)·워런트 심화 노트
-- 경제 개념 라이브러리, 검색, 사용자 메모, 즐겨찾기 및 학습 완료 표시
-- 인터랙티브 계산기: 현재가치/할인율, PER·이익수익률, 고든 성장모형, EPS×PER
-- Supabase Auth: 이메일 링크 및 이메일·비밀번호 로그인
-- Supabase 기반 학습 기록 및 실험 시나리오 동기화
-- Gemini AI 채팅(Supabase Edge Function), 대화 기록 저장·기기간 불러오기
-- AI 답변을 학습노트로 저장할 때 경제·투자 카테고리 자동 추천 및 저장 전 직접 선택 (규칙 기반 키워드 분류)
-- AI 학습노트 저장 시 Gemini가 제목·요약·핵심 결론·관련 섹션을 JSON으로 구조화하고 저장 전 사용자가 편집·승인
-- 구조화에는 추가 AI 요청 1회가 사용되며, 실패 시 원문 기반 임시 초안을 제공
-, `$x$`)를 MathJax로 시각화
-- 홈 화면 설치용 manifest, 버전 확인/업데이트 알림
+## 운영·개발 원칙
+- AI가 정리한 사실·숫자·출처는 저장 전에 검토한다.
+- 최신 주가·기업 실적은 출처와 기준일을 표시한다.
+- 브라우저 코드에 Gemini API 키 또는 Supabase secret/service_role 키를 넣지 않는다.
+- 계산기는 검증된 수식과 허용된 모델만 사용하며, AI가 생성한 임의 JavaScript를 실행하지 않는다.
+- 기존 학습 자료, 메모, 로그인, 클라우드 동기화, AI 대화를 보존한다.
+- 중요한 데이터는 주기적으로 JSON으로 백업한다.
+- 코드 변경 후 JavaScript 문법과 계산 샘플을 확인하고, Mac Safari 및 iPhone 홈 화면에서 실제 동작을 별도로 검증한다.
 
 ## 주요 파일
-- `index.html`: 현재 단일 페이지 앱, UI/프론트엔드 로직
-- `config.js`: **공개 가능한** Supabase 프로젝트 URL / publishable key만 포함
-- `manifest.webmanifest`, `icon.svg`: 홈 화면 앱
-- `version.json`: 최신 버전 확인용; 릴리스 시 버전도 함께 올릴 것
-- `README.md`: 개요·사용법
-- `ROADMAP.md`: 다음 기능 및 완료 기준
-- `AGENTS.md`: AI 개발 에이전트용 수정·보안·검증 규칙
+- `index.html`: 웹앱 UI 및 프런트엔드
+- `config.js`: 공개 가능한 Supabase URL / publishable key
+- `version.json`: 버전 정보
+- `ROADMAP.md`: 개발 계획과 완료 기준
+- `AGENTS.md`: 개발 원칙 및 안전·검증 규칙
 
-## 데이터 흐름
-1. FINLAB 웹앱 → Supabase Auth(사용자 인증).
-2. 학습 자료/메모/진도 → `public.finlab_workspaces` (user_id, payload JSONB, revision).
-3. AI 대화 → `public.finlab_ai_messages` (사용자별 RLS).
-4. AI 요청 → `finlab-gemini-chat` Edge Function → Gemini API.
-5. AI 일일 사용량 → `public.finlab_ai_usage` 및 `finlab_ai_take_quota`.
-
-**주의:** 브라우저에는 Gemini/OpenAI 등의 비밀키를 넣지 않는다. 민감한 설정은 Supabase Edge Function Secrets로 관리한다.
-
-## 활용 방법
-- Mac/iPhone에서 위 주소로 접속 후 **같은 FINLAB 계정**으로 로그인한다.
-- AI에 질문 → 답변 검토 → **학습 노트로 저장** → 개념 라이브러리에서 복습.
-- 새 버전이 나오면 버전 알림/업데이트를 사용한다. 홈 화면에서 오래된 페이지가 보이면 배포와 브라우저 캐시를 점검한다.
-- 중요한 데이터는 가끔 JSON으로 별도 백업한다.
-
-## 새 ChatGPT 대화에서 계속 개발하기
-“**FINLAB 발전시키자.** GitHub `shinda712/finlab-study`의 `README.md`, `ROADMAP.md`, `AGENTS.md`를 먼저 확인하고, 실제 코드와 Supabase 상태를 점검한 뒤 우선순위가 가장 높은 미완료 작업부터 개발해 줘. 기존 데이터/로그인/동기화/AI 기능은 유지하고 변경 후 테스트해 줘.”
-
-## 개발 주의 사항
-프로젝트 문서는 방향을 제시하는 자료이며, **실제 코드/배포/DB가 최종 확인 대상**이다. 상세 체크리스트는 [AGENTS.md](AGENTS.md), 기능 계획은 [ROADMAP.md](ROADMAP.md)를 참고한다.
+## 다른 대화에서 개발 이어가기
+“**FINLAB 발전시키자.** GitHub `shinda712/finlab-study`의 `AGENTS.md`, `README.md`, `ROADMAP.md`와 현재 코드를 확인하고, 저장된 학습 설계 원칙과 우선순위에 따라 진행해 줘. 기존 데이터·로그인·동기화·AI 기능을 보존하고 변경 후 테스트해 줘.”
