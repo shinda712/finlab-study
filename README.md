@@ -9,9 +9,10 @@ GitHub Pages 기반의 개인 경제·투자 학습 웹앱. 금융 개념을 읽
 - 코드: GitHub `shinda712/finlab-study` (`main` 브랜치, Pages)
 - 백엔드: Supabase 프로젝트 `cqxbkaxsvycgjmpniwwz` (서울)
 - 대상 기기: iPhone 홈 화면 앱 + Mac Safari
-- 현재 문서화된 버전: **FINLAB 3.2.1** (실제 코드/배포 버전 우선 확인)
+- 현재 문서화된 버전: **FINLAB 3.2.2** (실제 코드/배포 버전 우선 확인)
 
 ## 현재 기능
+- 비트코인 트레저리·mNAV(Multiple of Net Asset Value)·워런트 심화 노트
 - 경제 개념 라이브러리, 검색, 사용자 메모, 즐겨찾기 및 학습 완료 표시
 - 인터랙티브 계산기: 현재가치/할인율, PER·이익수익률, 고든 성장모형, EPS×PER
 - Supabase Auth: 이메일 링크 및 이메일·비밀번호 로그인
