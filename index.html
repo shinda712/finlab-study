@@ -309,12 +309,6 @@ function recommendFinanceCategory(title,body){
  if(scores[0].score===0)return {category:'경제 기초용어',reason:'특정 분야 키워드가 뚜렷하지 않아 경제 기초용어를 기본 추천합니다.'};
  return {category:scores[0].category,reason:scores[0].category+' 관련 키워드를 감지했어요. 저장 전에 직접 변경할 수 있습니다.'};
 }
-let categoryWasManuallyChanged=false;
-function refreshRecommendedCategory(){
- const result=recommendFinanceCategory($('finlab-ai-note-title').value,($('finlab-ai-note-summary').value||$('finlab-ai-note-body').value)+' '+$('finlab-ai-note-takeaway').value);
- if(!categoryWasManuallyChanged)$('finlab-ai-note-category').value=result.category;
- $('finlab-ai-category-hint').textContent=categoryWasManuallyChanged?'직접 선택한 분야를 유지하고 있어요.':'자동 추천: '+result.reason;
-}
 let noteDraft=null,structureRun=0,structureBusy=false,sourceDirty=false,categoryManual=false;
 let titleManual=false,summaryManual=false,takeawayManual=false,sourceNoteManual=false;
 const VALID_CATEGORIES=['거시경제','기업가치평가','재무제표·기업분석','투자전략','금융시장','암호자산','경제 기초용어','미국주식','채권','재무제표','기타'];
