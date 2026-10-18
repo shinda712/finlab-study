@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#17253b"/>
 <meta name="description" content="채권금리와 PER을 실험하며 공부하는 나의 금융 개념 DB"/>
-<title>FINLAB 3.2.1 — 나의 경제·투자 학습 플랫폼</title>
+<title>FINLAB 3.2.2 — 나의 경제·투자 학습 플랫폼</title>
 <link rel="manifest" href="./manifest.webmanifest?v=3.2.0">
 <link rel="icon" href="./icon.svg?v=3.2.0" type="image/svg+xml">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -24,6 +24,7 @@
 .topbar{flex-wrap:wrap}.cloud-chip{border:1px solid #d8e5f2;border-radius:99px;background:#fff;color:#5e7085;padding:9px 13px;font-size:12px;font-weight:750;margin-left:auto;white-space:nowrap}.cloud-chip.ok{color:#0d7565;border-color:#bce5d7;background:#edfbf5}.cloud-chip.warn{color:#9a5421;border-color:#f1d9ad;background:#fff7e8}.cloud-status{display:flex;align-items:center;gap:10px;background:#f5f9ff;border-radius:12px;padding:15px;margin:12px 0}.status-dot{display:inline-block;width:11px;height:11px;background:#94a3b8;border-radius:50%}.status-dot.ok{background:#0d9488}.status-dot.warn{background:#d59a38}.action-row{display:flex;gap:9px;flex-wrap:wrap}.fine-divider{border:0;border-top:1px solid var(--line);margin:18px 0}.scenario-card{min-height:150px}.scenario-values{font-size:12px;color:#66758b;word-break:break-word}.scenario-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}.scenario-controls button{padding:8px 12px}.lab-panel .btn{margin-top:10px}
 @media(max-width:700px){.sidebar{padding:13px 12px 8px;gap:9px}.nav{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;overflow-x:auto;overflow-y:hidden;padding-bottom:5px;scrollbar-width:thin}.nav button{flex:0 0 auto;width:auto!important;min-width:104px;white-space:nowrap;padding:7px 9px}.cloud-chip{order:2;margin-left:0}.topbar>.search{order:3;min-width:100%;flex:1}.scenario-controls{flex-direction:column}.scenario-controls button{width:100%}}
 </style>
+<script defer src="./treasury-lesson.js?v=3.2.2"></script>
 </head>
 <body>
 <div class="shell">
@@ -89,7 +90,7 @@ let db,storageReady=true,currentConcept=null,activeView='home',activeLab='pv';
 const $=id=>document.getElementById(id);
 const num=(v,n=1)=>Number(v).toFixed(n);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function initData(){try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&Array.isArray(saved.concepts)){db=saved;for(const seed of INITIAL_DB.concepts){if(!db.concepts.some(c=>c.id===seed.id)) db.concepts.unshift(seed)}}else db=structuredClone(INITIAL_DB)}catch(e){storageReady=false;db=JSON.parse(JSON.stringify(INITIAL_DB))}}
+function initData(){try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&Array.isArray(saved.concepts)){db=saved;for(const seed of [...INITIAL_DB.concepts,...(window.FINLAB_TREASURY_LESSON?[window.FINLAB_TREASURY_LESSON]:[])]){if(!db.concepts.some(c=>c.id===seed.id)) db.concepts.unshift(seed)}}else db=structuredClone(INITIAL_DB)}catch(e){storageReady=false;db=JSON.parse(JSON.stringify(INITIAL_DB))}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(db));if(cloudUser&&cloudRevision!==null){cloudWritePending=true;try{localStorage.setItem('finlab_pending_cloud_v2','1')}catch(_){};queueCloudWrite()}return true}catch(e){storageReady=false;return false}}
 function switchView(view){activeView=view;document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===view));document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===view||(view==='detail'&&b.dataset.nav==='library')));$('crumb').textContent='MY FINANCE LEARNING SPACE / '+({home:'HOME',library:'CONCEPTS',detail:'STUDY NOTES',lab:'EXPERIMENTS',manage:'DATABASE'}[view]||'HOME');if(view==='home'||view==='library')renderCards();if(view==='manage')$('add-status').textContent='';window.scrollTo({top:0,behavior:'instant'})}
 function cardHTML(c){const done=db.completed.includes(c.id);return `<div class="concept-card"><span class="category">${esc(c.category)} ${done?'· ✓ 학습 완료':''}</span><h3>${esc(c.title)}</h3><p>${esc(c.summary)}</p><div class="tags">${(c.tags||[]).slice(0,5).map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}</div><div class="card-bottom"><span class="meta">${esc(c.level||'기초')} · ${esc(c.date||'직접 추가')}</span><button data-open="${esc(c.id)}">노트 열기 →</button></div></div>`}
