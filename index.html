@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#17253b"/>
 <meta name="description" content="채권금리와 PER을 실험하며 공부하는 나의 금융 개념 DB"/>
-<title>FINLAB 3.2.2 — 나의 경제·투자 학습 플랫폼</title>
+<title>FINLAB 3.3.0 — 나의 경제·투자 학습 플랫폼</title>
 <link rel="manifest" href="./manifest.webmanifest?v=3.2.0">
 <link rel="icon" href="./icon.svg?v=3.2.0" type="image/svg+xml">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -203,7 +203,7 @@ window.FINLAB_saveAIConcept=function(item){
  if(cloudConflict)throw Error('동기화 충돌을 해결한 후 저장해 주세요.');
  const title=String(item.title||'').trim(),body=String(item.body||'').trim();
  if(!title||!body)throw Error('제목과 내용을 모두 입력해 주세요.');
- const c={id:'ai-'+Date.now()+'-'+Math.random().toString(36).slice(2,9),title:title.slice(0,140),summary:body.slice(0,150),category:'AI 학습노트',level:'AI 정리 · 검토 필요',date:new Date().toISOString().slice(0,10),tags:['Gemini','AI 학습'],key_takeaway:body.slice(0,200),sections:[{heading:'AI 설명 · 사실관계 확인 필요',paragraphs:[body.slice(0,11000)]}],labIds:[]};
+ const d=item.structured||{};const c={id:'ai-'+Date.now()+'-'+Math.random().toString(36).slice(2,9),title:title.slice(0,140),summary:String(d.summary||body.slice(0,150)).slice(0,500),category:'AI 학습노트',level:'AI 정리 · 검토 필요',date:new Date().toISOString().slice(0,10),tags:['Gemini','AI 학습'],key_takeaway:String(d.takeaway||body.slice(0,200)).slice(0,500),sections:Array.isArray(d.sections)&&d.sections.length?d.sections:[{heading:'AI 설명 · 사실관계 확인 필요',paragraphs:[body.slice(0,11000)]}],source_note:'Gemini AI 생성 답변을 자동 분류한 초안입니다. 사실과 출처는 검증이 필요합니다.',labIds:[]};
  db.concepts.unshift(c);
  if(!save()){db.concepts.shift();throw Error('기기 저장이 실패했습니다.');}
  renderCards();
@@ -241,7 +241,7 @@ initData();bind();bindCloud();renderCards();initCloud();if(!storageReady)alert('
 <p id="finlab-ai-status" class="finlab-ai-status"></p>
 </div>
 </aside>
-<div id="finlab-ai-save-dialog" class="finlab-ai-panel" style="z-index:2100;bottom:90px;height:auto;max-height:80dvh;overflow:auto;padding:18px;display:none" role="dialog" aria-modal="true" aria-label="AI 학습노트 저장"><h3 style="margin:0 0 8px">📚 AI 답변을 학습 DB에 저장</h3><p class="finlab-ai-hint">제목과 본문을 검토·수정한 뒤 저장해 주세요. AI 답변은 오류가 있을 수 있어요.</p><label for="finlab-ai-note-title">제목</label><input id="finlab-ai-note-title" style="width:100%;padding:9px;border:1px solid #d8e2ee;border-radius:8px" maxlength="140"/><label for="finlab-ai-note-body">내용</label><textarea id="finlab-ai-note-body" style="min-height:190px"></textarea><div class="finlab-ai-actions"><button class="primary" id="finlab-ai-note-save" type="button">검토 완료 · 저장</button><button id="finlab-ai-note-cancel" type="button">취소</button></div><p id="finlab-ai-note-status" class="finlab-ai-status"></p></div>
+<div id="finlab-ai-save-dialog" class="finlab-ai-panel" style="z-index:2100;bottom:90px;height:auto;max-height:80dvh;overflow:auto;padding:18px;display:none" role="dialog" aria-modal="true" aria-label="AI 학습노트 저장"><h3 style="margin:0 0 8px">📚 AI 답변을 학습 DB에 저장</h3><p class="finlab-ai-hint">제목과 본문을 검토·수정한 뒤 저장해 주세요. AI 답변은 오류가 있을 수 있어요.</p><label for="finlab-ai-note-title">제목</label><input id="finlab-ai-note-title" style="width:100%;padding:9px;border:1px solid #d8e2ee;border-radius:8px" maxlength="140"/><label for="finlab-ai-note-body">AI 원문</label><textarea id="finlab-ai-note-body" style="min-height:110px"></textarea><p class="finlab-ai-hint">자동 분류된 섹션을 검토하고 편집하세요. 원문의 사실관계와 출처는 별도로 확인해야 합니다.</p><label for="finlab-ai-note-summary">한 줄 요약</label><textarea id="finlab-ai-note-summary" style="min-height:55px"></textarea><label for="finlab-ai-note-takeaway">핵심 결론</label><textarea id="finlab-ai-note-takeaway" style="min-height:55px"></textarea><div id="finlab-ai-note-sections"></div><button type="button" id="finlab-ai-note-restructure">↻ 원문 다시 구조화</button><div class="finlab-ai-actions"><button class="primary" id="finlab-ai-note-save" type="button">검토 완료 · 저장</button><button id="finlab-ai-note-cancel" type="button">취소</button></div><p id="finlab-ai-note-status" class="finlab-ai-status"></p></div>
 <script>
 (function(){
 const $=id=>document.getElementById(id);
@@ -283,9 +283,38 @@ if(!error){const option=document.createElement('option');option.value=id;option.
 }catch(e){loading.textContent='⚠ '+e.message;status.textContent='응답 실패. 질문을 다시 입력해 주세요.';input.value=q;}finally{busy=false;$('finlab-ai-send').disabled=false}
 });
 input.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey))$('finlab-ai-send').click()});
-function openSave(body){dialog.style.display='block';$('finlab-ai-note-title').value=(history.filter(m=>m.role==='user').slice(-1)[0]?.content||'AI 학습노트').slice(0,140);$('finlab-ai-note-body').value=body;$('finlab-ai-note-status').textContent='';}
+const HEADINGS=['핵심 정의','핵심 원리','수식 및 계산','수치 예시','투자 시사점','주의사항 및 검증','관련 개념'];
+let noteDraft=null;
+function classifyNote(text){
+ const body=String(text||'').replace(/\r/g,'').trim();
+ const chunks=body.split(/\n(?=#{1,5}\s|\d+[.)]\s|[■●◆]\s)/).map(x=>x.trim()).filter(Boolean);
+ const groups=HEADINGS.map(heading=>({heading,paragraphs:[]}));
+ for(const chunk of chunks){
+  const lines=chunk.split('\n'),head=lines[0].replace(/^[#*\s\d.)■●◆-]+/,'').trim();
+  const idx=/출처|검증|주의|한계|리스크/.test(head)?5:/관련|연결/.test(head)?6:/투자|활용|시사점|전략/.test(head)?4:/예시|사례|비교/.test(head)?3:/공식|수식|계산/.test(head)?2:/원리|특징|영향|차이/.test(head)?1:0;
+  groups[idx].paragraphs.push((lines.length>1?lines.slice(1).join('\n'):chunk).slice(0,11000));
+ }
+ const first=body.split('\n').map(x=>x.replace(/^[#*\s-]+/,'').trim()).find(x=>x.length>15&&!/^안녕하세요/.test(x))||body;
+ return {summary:first.slice(0,180),takeaway:first.slice(0,240),sections:groups.filter(x=>x.paragraphs.length)};
+}
+function renderNoteDraft(){
+ const root=$('finlab-ai-note-sections');root.replaceChildren();
+ noteDraft.sections.forEach((part,i)=>{
+  const box=document.createElement('div');box.style.cssText='margin:10px 0;padding:10px;border:1px solid #d8e2ee;border-radius:9px';
+  const label=document.createElement('label');label.textContent=part.heading;box.append(label);
+  const area=document.createElement('textarea');area.dataset.sectionIndex=String(i);area.style.minHeight='95px';area.value=part.paragraphs.join('\n\n');box.append(area);root.append(box);
+ });
+ $('finlab-ai-note-summary').value=noteDraft.summary;$('finlab-ai-note-takeaway').value=noteDraft.takeaway;
+}
+function openSave(body){dialog.style.display='block';$('finlab-ai-note-title').value=(history.filter(m=>m.role==='user').slice(-1)[0]?.content||'AI 학습노트').slice(0,140);$('finlab-ai-note-body').value=body;noteDraft=classifyNote(body);renderNoteDraft();$('finlab-ai-note-status').textContent='자동 분류 초안입니다. 검토 후 저장해 주세요.';}
+$('finlab-ai-note-restructure').addEventListener('click',()=>{if(!confirm('편집한 분류 내용을 원문 기준으로 다시 만들까요?'))return;noteDraft=classifyNote($('finlab-ai-note-body').value);renderNoteDraft()});
 $('finlab-ai-note-cancel').addEventListener('click',()=>dialog.style.display='none');
-$('finlab-ai-note-save').addEventListener('click',()=>{try{const id=window.FINLAB_saveAIConcept({title:$('finlab-ai-note-title').value,body:$('finlab-ai-note-body').value});$('finlab-ai-note-status').textContent='✅ 학습 DB에 추가했어요. FINLAB 클라우드 동기화 완료 표시를 확인해 주세요.';setTimeout(()=>dialog.style.display='none',1700)}catch(e){$('finlab-ai-note-status').textContent='⚠ '+e.message}});
+$('finlab-ai-note-save').addEventListener('click',()=>{try{
+ const sections=noteDraft.sections.map((part,i)=>({heading:part.heading,paragraphs:[$('finlab-ai-note-sections').querySelector('[data-section-index="'+i+'"]').value.trim()].filter(Boolean)})).filter(x=>x.paragraphs.length);
+ if(!sections.length)throw Error('학습 내용이 비어 있습니다.');
+ window.FINLAB_saveAIConcept({title:$('finlab-ai-note-title').value,body:$('finlab-ai-note-body').value,structured:{summary:$('finlab-ai-note-summary').value.trim(),takeaway:$('finlab-ai-note-takeaway').value.trim(),sections}});
+ $('finlab-ai-note-status').textContent='✅ 구조화된 노트를 저장했어요. 클라우드 동기화 완료를 확인하세요.';setTimeout(()=>dialog.style.display='none',1700)
+}catch(e){$('finlab-ai-note-status').textContent='⚠ '+e.message}});
 async function copy(){const q=$('finlab-ai-question').value.trim();if(!q){$('finlab-ai-status').textContent='질문을 입력해 주세요.';return}try{await navigator.clipboard.writeText(q);$('finlab-ai-status').textContent='복사 완료'}catch(e){$('finlab-ai-question').select();$('finlab-ai-status').textContent='Cmd+C로 복사해 주세요.'}}
 $('finlab-ai-copy').addEventListener('click',copy);$('finlab-ai-ask').addEventListener('click',()=>{window.open('https://chatgpt.com/','_blank','noopener,noreferrer');copy()});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&panel.classList.contains('open')&&!busy)sync()});
