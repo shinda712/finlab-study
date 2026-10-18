@@ -1,5 +1,5 @@
 {
-  "version": "3.3.0",
-  "build": "2026-10-18-ai-structured-notes",
-  "releaseNotes": "AI 학습노트 자동 분류, 저장 전 섹션별 미리보기 및 편집"
+  "version": "3.2.3",
+  "build": "2026-10-18-treasury-calculators",
+  "releaseNotes": "BTC 트레저리·EV mNAV 비교, BTC Yield, 워런트 수익·희석 인터랙티브 계산기 추가"
 }
