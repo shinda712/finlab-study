@@ -1,5 +1,5 @@
 {
-  "version": "3.3.2",
-  "build": "2026-10-19-mathjax-formula-rendering",
-  "releaseNotes": "학습노트 본문 및 수식 필드의 LaTeX 수식 렌더링 지원"
+  "version": "3.3.3",
+  "build": "2026-10-19-peg-lesson-experiment-link",
+  "releaseNotes": "PEG 전용 계산기 추가, 단계별 계산·해석·학습노트 연결"
 }
