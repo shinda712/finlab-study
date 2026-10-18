@@ -9,7 +9,7 @@ GitHub Pages 기반의 개인 경제·투자 학습 웹앱. 금융 개념을 읽
 - 코드: GitHub `shinda712/finlab-study` (`main` 브랜치, Pages)
 - 백엔드: Supabase 프로젝트 `cqxbkaxsvycgjmpniwwz` (서울)
 - 대상 기기: iPhone 홈 화면 앱 + Mac Safari
-- 현재 문서화된 버전: **FINLAB 3.2.2** (실제 코드/배포 버전 우선 확인)
+- 현재 문서화된 버전: **FINLAB 3.3.0** (실제 코드/배포 버전 우선 확인)
 
 ## 현재 기능
 - 비트코인 트레저리·mNAV(Multiple of Net Asset Value)·워런트 심화 노트
@@ -18,7 +18,7 @@ GitHub Pages 기반의 개인 경제·투자 학습 웹앱. 금융 개념을 읽
 - Supabase Auth: 이메일 링크 및 이메일·비밀번호 로그인
 - Supabase 기반 학습 기록 및 실험 시나리오 동기화
 - Gemini AI 채팅(Supabase Edge Function), 대화 기록 저장·기기간 불러오기
-- AI 응답 검토 후 학습노트로 등록
+- AI 응답 자동 섹션 분류, 미리보기·편집·승인 후 학습노트로 등록 (규칙 기반 초안, 사실 검증은 사용자 확인 필요)
 - 홈 화면 설치용 manifest, 버전 확인/업데이트 알림
 
 ## 주요 파일
