@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#17253b"/>
 <meta name="description" content="채권금리와 PER을 실험하며 공부하는 나의 금융 개념 DB"/>
-<title>FINLAB 3.3.3 — 나의 경제·투자 학습 플랫폼</title>
-<link rel="manifest" href="./manifest.webmanifest?v=3.3.3">
-<link rel="icon" href="./icon.svg?v=3.3.3" type="image/svg+xml">
+<title>FINLAB 3.3.4 — 나의 경제·투자 학습 플랫폼</title>
+<link rel="manifest" href="./manifest.webmanifest?v=3.3.4">
+<link rel="icon" href="./icon.svg?v=3.3.4" type="image/svg+xml">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="FINLAB">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -18,13 +18,34 @@
 @media(max-width:1000px){.sidebar{width:208px}.shell{grid-template-columns:208px minmax(0,1fr)}.main{padding:26px 24px 90px}.content-split{grid-template-columns:1fr}.outline{position:static}.outline a{display:none}.manager,.lab-layout{grid-template-columns:1fr}}
 @media(max-width:680px){.shell{display:block}.sidebar{width:100%;position:static;height:auto;padding:12px 14px;display:block}.brand{padding:0;display:inline-flex}.brand strong{font-size:14px}.brand small{display:none}.brand-icon{width:32px;height:32px;font-size:18px}.side-foot{display:none}.nav{display:grid;grid-template-columns:repeat(4,1fr);margin-top:12px;gap:3px}.nav button{font-size:11px;padding:8px 3px;display:flex;flex-direction:column;gap:2px;text-align:center}.nav .ico{font-size:16px}.main{padding:21px 15px 64px}.topbar{margin-bottom:19px;align-items:stretch;flex-direction:column;gap:9px}.search{min-width:0}.hero{padding:28px 23px;border-radius:18px}.hero h1{font-size:26px}.hero p{font-size:13px}.stats{gap:8px}.stat{padding:12px}.stat .value{font-size:23px}.stat span{font-size:10px}.concept-grid{grid-template-columns:1fr}.sectionhead h2{font-size:20px}.heading-page h1{font-size:26px}.article,.panel,.form-card{padding:20px}.article>h2{font-size:23px}.pair{grid-template-columns:1fr 1fr}.result .big{font-size:30px}.lab-tabs button{font-size:12px;padding:9px 12px}}
 @media print{.sidebar,.topbar,.lab-tabs,.btn,.outline,.footer{display:none!important}.shell{display:block}.main{padding:0}.view{display:block!important}.hero{color:#111;background:#fff}.article,.panel{break-inside:avoid}}
+
+/* Structured financial report tables and figures in saved FINLAB notes */
+.finlab-report-figure{margin:18px 0;padding:15px;border:1px solid #e2e9f3;border-radius:13px;background:#fbfcff}
+.finlab-report-figure h4{margin:0 0 10px;font-size:14px;color:#273c57}
+.finlab-report-tablewrap{width:100%;overflow-x:auto;margin:16px 0;border:1px solid #e6ecf3;border-radius:12px}
+.finlab-report-table{width:100%;border-collapse:collapse;min-width:420px;font-size:12px;line-height:1.6}
+.finlab-report-table th{background:#f1f5fb;color:#415873;text-align:left;font-size:12px;font-weight:800;white-space:nowrap}
+.finlab-report-table th,.finlab-report-table td{padding:10px 12px;border-bottom:1px solid #e8edf5}
+.finlab-report-table tbody tr:last-child td{border-bottom:none}
+.finlab-report-table tbody tr:nth-child(even){background:#fcfdff}
+.finlab-report-barrow{display:grid;grid-template-columns:92px minmax(0,1fr);gap:10px;align-items:center;margin:12px 0;font-size:12px}
+.finlab-report-label{font-size:12px;font-weight:750;color:#34465d;overflow-wrap:anywhere}
+.finlab-report-track{height:13px;background:#e9eff6;border-radius:5px;overflow:hidden;min-width:60px}
+.finlab-report-fill{display:block;height:100%;border-radius:5px;background:#587ee6}
+.finlab-report-fill.profit{background:#30a397}
+.finlab-report-value{font-variant-numeric:tabular-nums;white-space:nowrap;color:#56667b;margin-left:6px;font-size:11px}
+.finlab-report-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:#67758a;margin-bottom:10px}
+.finlab-report-dot{display:inline-block;width:8px;height:8px;border-radius:2px;background:#587ee6;margin-right:5px}
+.finlab-report-dot.profit{background:#30a397}
+@media(max-width:640px){.finlab-report-figure{padding:12px}.finlab-report-table{font-size:11px}.finlab-report-barrow{grid-template-columns:78px minmax(0,1fr);gap:7px}}
+
 </style>
 
 <style>
 .topbar{flex-wrap:wrap}.cloud-chip{border:1px solid #d8e5f2;border-radius:99px;background:#fff;color:#5e7085;padding:9px 13px;font-size:12px;font-weight:750;margin-left:auto;white-space:nowrap}.cloud-chip.ok{color:#0d7565;border-color:#bce5d7;background:#edfbf5}.cloud-chip.warn{color:#9a5421;border-color:#f1d9ad;background:#fff7e8}.cloud-status{display:flex;align-items:center;gap:10px;background:#f5f9ff;border-radius:12px;padding:15px;margin:12px 0}.status-dot{display:inline-block;width:11px;height:11px;background:#94a3b8;border-radius:50%}.status-dot.ok{background:#0d9488}.status-dot.warn{background:#d59a38}.action-row{display:flex;gap:9px;flex-wrap:wrap}.fine-divider{border:0;border-top:1px solid var(--line);margin:18px 0}.scenario-card{min-height:150px}.scenario-values{font-size:12px;color:#66758b;word-break:break-word}.scenario-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}.scenario-controls button{padding:8px 12px}.lab-panel .btn{margin-top:10px}
 @media(max-width:700px){.sidebar{padding:13px 12px 8px;gap:9px}.nav{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;overflow-x:auto;overflow-y:hidden;padding-bottom:5px;scrollbar-width:thin}.nav button{flex:0 0 auto;width:auto!important;min-width:104px;white-space:nowrap;padding:7px 9px}.cloud-chip{order:2;margin-left:0}.topbar>.search{order:3;min-width:100%;flex:1}.scenario-controls{flex-direction:column}.scenario-controls button{width:100%}}
 </style>
-<script src="./treasury-lesson.js?v=3.2.4"></script>
+<script src="./treasury-lesson.js?v=3.3.4"></script>
 <script>
 window.MathJax = {
   loader: {load: ['ui/safe']},
@@ -123,7 +144,7 @@ window.MathJax = {
  <p class="help">※ 모든 시뮬레이션은 금융 개념 학습을 위한 단순화된 가정이며, 특정 종목의 실제 적정 가치나 매매 신호를 의미하지 않습니다.</p></section>
  <section id="manage" class="view reveal"><div class="heading-page"><span class="eyebrow">MY KNOWLEDGE BASE</span><h1>개념 추가 · 데이터 백업</h1><p>새롭게 알게 된 내용을 추가하고, JSON으로 백업해서 다음 학습에 이어가세요.</p></div><div class="manager"><div class="form-card"><h3>＋ 새 개념 추가</h3><form id="add-form"><div class="field"><label for="new-title">개념 이름 *</label><input id="new-title" required maxlength="120" placeholder="예: 실질금리와 명목금리의 차이"/></div><div class="field"><label for="new-category">분류</label><select id="new-category"><option>거시경제</option><option>기업가치평가</option><option>재무제표·기업분석</option><option>투자전략</option><option>금융시장</option><option>암호자산</option><option>경제 기초용어</option><option>미국주식</option><option>채권</option><option>재무제표</option><option>기타</option></select></div><div class="field"><label for="new-tags">태그 (쉼표로 구분)</label><input id="new-tags" placeholder="실질금리, 인플레이션, 연준"/></div><div class="field"><label for="new-summary">핵심 요약 *</label><textarea id="new-summary" required placeholder="이 개념을 한두 문장으로 정리해 보세요."></textarea></div><div class="field"><label for="new-body">상세 내용</label><textarea id="new-body" style="min-height:210px" placeholder="예시, 공식, 내가 이해한 내용, 다음에 확인할 것 등을 기록하세요."></textarea></div><button class="btn" type="submit">개념 저장하기</button><div class="status" id="add-status" aria-live="polite"></div></form></div>
  <div class="form-card"><h3>⤓ 내 공부 DB 백업</h3><p style="font-size:13px;color:var(--muted)">현재 저장된 개념, 메모, 학습 완료 여부를 <b>JSON 한 파일</b>로 내보낼 수 있어요.</p><button class="btn" id="export-btn">↓ JSON 백업 다운로드</button><div style="height:15px"></div><h3>⤒ 이전 백업 가져오기</h3><p style="font-size:13px;color:var(--muted)">내보냈던 JSON을 불러와 현재 데이터를 복원합니다. 복원하면 현재 저장 내역을 대체합니다.</p><input type="file" id="import-file" accept=".json,application/json" style="max-width:100%;margin-bottom:14px"/><button class="btn secondary" id="import-btn">↑ JSON 가져오기</button><div class="status" id="import-status" aria-live="polite"></div><div class="notice" style="margin-top:18px"><b>저장 방식 안내</b><br/>로그인하지 않으면 브라우저에만 저장됩니다. Supabase 연결과 로그인이 완료되면 변경된 학습 DB가 클라우드와 동기화됩니다. 두 기기를 동시에 편집하면 충돌 알림이 나타날 수 있으니 JSON 백업을 보관하세요.</div><div style="margin-top:20px"><h3>추천 확장 단계</h3><p style="font-size:13px;color:var(--muted);margin:0">이 버전을 GitHub Pages에 배포하고 Supabase 프로젝트를 연결하면 아이폰과 PC에서 동일 계정으로 동기화할 수 있습니다. 자세한 절차는 함께 제공된 README.md를 확인하세요.</p></div></div></div></section>
- <div class="footer">FINLAB · Interactive finance learning · v3.3.3 · 2026-10-19</div>
+ <div class="footer">FINLAB · Interactive finance learning · v3.3.4 · 2026-10-19</div>
 
  <section id="sync" class="view reveal">
    <div class="heading-page"><span class="eyebrow">FINLAB CLOUD</span><h1>☁ 계정 · 데이터 동기화</h1><p>같은 이메일로 로그인하면 아이폰과 PC의 학습 기록을 이어서 볼 수 있어요.</p></div>
@@ -177,7 +198,44 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(db));if(cloudUser&&c
 function switchView(view){activeView=view;document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===view));document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===view||(view==='detail'&&b.dataset.nav==='library')));$('crumb').textContent='MY FINANCE LEARNING SPACE / '+({home:'HOME',library:'CONCEPTS',detail:'STUDY NOTES',lab:'EXPERIMENTS',manage:'DATABASE'}[view]||'HOME');if(view==='home'||view==='library')renderCards();if(view==='manage')$('add-status').textContent='';window.scrollTo({top:0,behavior:'instant'})}
 function cardHTML(c){const done=db.completed.includes(c.id);return `<div class="concept-card"><span class="category">${esc(c.category)} ${done?'· ✓ 학습 완료':''}</span><h3>${esc(c.title)}</h3><p>${esc(c.summary)}</p><div class="tags">${(c.tags||[]).slice(0,5).map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}</div><div class="card-bottom"><span class="meta">${esc(c.level||'기초')} · ${esc(c.date||'직접 추가')}</span><button data-open="${esc(c.id)}">노트 열기 →</button></div></div>`}
 function renderCards(){const q=$('search').value.trim().toLowerCase();let items=db.concepts.filter(c=>([c.title,c.category,c.summary,...(c.tags||[]),...(c.sections||[]).flatMap(s=>[s.heading,...(s.paragraphs||[])])].join(' ')).toLowerCase().includes(q));$('home-cards').innerHTML=items.slice(0,4).map(cardHTML).join('')||'<div class="empty">검색 결과가 없어요.</div>';$('library-cards').innerHTML=items.map(cardHTML).join('')||'<div class="empty">일치하는 개념이 없어요. 다른 검색어를 입력해 보세요.</div>';$('stat-count').textContent=db.concepts.length;$('stat-done').textContent=db.completed.length;renderScenarios()}
-function openConcept(id){const c=db.concepts.find(x=>x.id===id);if(!c)return;const articleRoot=$('article');clearMath(articleRoot);currentConcept=id;let s=`<span class="category">${esc(c.category)}</span><h2>${esc(c.title)}</h2><p class="lead">${esc(c.summary)}</p><div class="tags">${(c.tags||[]).map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}</div><div class="takeaway">💡 핵심: ${esc(c.key_takeaway||c.summary)}</div>`;(c.sections||[]).forEach((section,i)=>{s+=`<section class="lesson" id="lesson-${i}"><h3>${esc(section.heading)}</h3>${(section.paragraphs||[]).map(p=>`<p>${renderMathText(p).replace(/\n/g,'<br>')}</p>`).join('')}${section.formula?renderFormulaMath(section.formula):''}${section.tip?`<div class="tip">🔎 ${esc(section.tip)}</div>`:''}</section>`});s+=`<div class="lesson"><h3>나만의 이해 노트 ✍️</h3><p>내가 이해한 원리, 투자에 적용할 생각, 아직 헷갈리는 부분을 남겨보세요.</p><textarea class="memo" id="my-memo" placeholder="예: 국채금리 상승 시 실질금리 상승인지도 함께 확인하기">${esc(db.notes[id]||'')}</textarea><div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:10px;flex-wrap:wrap"><button class="btn" id="memo-save">메모 저장</button><span class="status" id="memo-status"></span></div><label class="checkline"><input type="checkbox" id="done" ${db.completed.includes(id)?'checked':''}/> 이 개념은 이해했어요 (학습 완료 표시)</label></div>`;if(!INITIAL_DB.concepts.some(x=>x.id===id))s+=`<button class="btn danger" id="delete-concept" style="margin-top:18px">이 개념 삭제</button>`;$('article').innerHTML=s;typesetMath(articleRoot);
+
+function renderFinlabArticleVisual(section){
+ const safe=v=>esc(String(v===null||v===undefined?'':v));
+ let out='';
+ const table=section&&section.table;
+ if(table&&Array.isArray(table.columns)&&Array.isArray(table.rows)){
+  out+='<div class="finlab-report-tablewrap"><table class="finlab-report-table"><thead><tr>'+
+   table.columns.map(c=>'<th>'+safe(c)+'</th>').join('')+'</tr></thead><tbody>'+
+   table.rows.map(row=>'<tr>'+table.columns.map((_,i)=>'<td>'+safe(Array.isArray(row)?row[i]:'')+'</td>').join('')+'</tr>').join('')+
+   '</tbody></table></div>';
+ }
+ const chart=section&&section.chart;
+ if(chart&&chart.type==='bar'&&Array.isArray(chart.series)&&chart.series.length){
+  const max=Math.max(1,...chart.series.map(x=>Number(x.revenue)||0));
+  out+='<div class="finlab-report-figure"><h4>사업부별 매출 및 영업이익 비교</h4>'+
+   '<div class="finlab-report-legend"><span><i class="finlab-report-dot"></i>매출</span><span><i class="finlab-report-dot profit"></i>영업이익</span><span>단위: '+safe(chart.unit||'')+'</span></div>'+
+   chart.series.map(item=>{
+    const revenue=Number(item.revenue)||0,op=Number(item.operating)||0;
+    const revenuePct=Math.max(0,Math.min(100,revenue/max*100));
+    const profitPct=Math.max(0,Math.min(100,op/max*100));
+    return '<div class="finlab-report-barrow"><div class="finlab-report-label">'+safe(item.label)+'</div><div>'+
+      '<div style="display:flex;align-items:center"><div class="finlab-report-track" style="flex:1"><span class="finlab-report-fill" style="width:'+revenuePct.toFixed(2)+'%"></span></div><span class="finlab-report-value">'+safe(revenue.toFixed(3))+'</span></div>'+
+      '<div style="display:flex;align-items:center;margin-top:5px"><div class="finlab-report-track" style="flex:1"><span class="finlab-report-fill profit" style="width:'+profitPct.toFixed(2)+'%"></span></div><span class="finlab-report-value">'+safe(op.toFixed(3))+'</span></div>'+
+      '</div></div>';
+   }).join('')+'</div>';
+ }
+ const visual=section&&section.visual;
+ if(visual&&visual.kind==='comparison'&&Array.isArray(visual.items)&&visual.items.length){
+  const max=Math.max(1,...visual.items.map(x=>Number(x.value)||0));
+  out+='<div class="finlab-report-figure"><h4>'+safe(visual.title||'비교')+'</h4>'+
+   visual.items.map(item=>'<div class="finlab-report-barrow"><div class="finlab-report-label">'+safe(item.label)+'</div>'+
+    '<div style="display:flex;align-items:center"><div class="finlab-report-track" style="flex:1"><span class="finlab-report-fill" style="width:'+Math.max(0,Math.min(100,(Number(item.value)||0)/max*100)).toFixed(2)+'%"></span></div>'+
+    '<span class="finlab-report-value">'+safe(item.value)+' '+safe(item.unit)+'</span></div></div>').join('')+'</div>';
+ }
+ return out;
+}
+
+function openConcept(id){const c=db.concepts.find(x=>x.id===id);if(!c)return;const articleRoot=$('article');clearMath(articleRoot);currentConcept=id;let s=`<span class="category">${esc(c.category)}</span><h2>${esc(c.title)}</h2><p class="lead">${esc(c.summary)}</p><div class="tags">${(c.tags||[]).map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}</div><div class="takeaway">💡 핵심: ${esc(c.key_takeaway||c.summary)}</div>`;(c.sections||[]).forEach((section,i)=>{s+=`<section class="lesson" id="lesson-${i}"><h3>${esc(section.heading)}</h3>${(section.paragraphs||[]).map(p=>`<p>${renderMathText(p).replace(/\n/g,'<br>')}</p>`).join('')}${section.formula?renderFormulaMath(section.formula):''}${renderFinlabArticleVisual(section)}${section.tip?`<div class="tip">🔎 ${esc(section.tip)}</div>`:''}</section>`});s+=`<div class="lesson"><h3>나만의 이해 노트 ✍️</h3><p>내가 이해한 원리, 투자에 적용할 생각, 아직 헷갈리는 부분을 남겨보세요.</p><textarea class="memo" id="my-memo" placeholder="예: 국채금리 상승 시 실질금리 상승인지도 함께 확인하기">${esc(db.notes[id]||'')}</textarea><div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:10px;flex-wrap:wrap"><button class="btn" id="memo-save">메모 저장</button><span class="status" id="memo-status"></span></div><label class="checkline"><input type="checkbox" id="done" ${db.completed.includes(id)?'checked':''}/> 이 개념은 이해했어요 (학습 완료 표시)</label></div>`;if(!INITIAL_DB.concepts.some(x=>x.id===id))s+=`<button class="btn danger" id="delete-concept" style="margin-top:18px">이 개념 삭제</button>`;$('article').innerHTML=s;typesetMath(articleRoot);
 $('article-outline').innerHTML=`<h3>이 노트의 목차</h3>${(c.sections||[]).map((v,i)=>`<a href="#lesson-${i}">${esc(v.heading)}</a>`).join('')}<p class="sub">관련 실험</p>${(c.labIds||[]).map(l=>`<button class="small-link" style="display:block;margin:8px 0" data-lab="${l}">${{pv:'할인율과 현재가치',earnings:'PER과 이익수익률',gordon:'적정 PER 모형',epsper:'EPS × PER',treasury:'BTC 현물 vs 트레저리',btcyield:'BTC Yield',warrant:'워런트 수익·희석'}[l]||'실험실'} →</button>`).join('')}${(/\bPEG\b/i.test(c.title+' '+(c.tags||[]).join(' '))?'<button class="small-link" style="display:block;margin:8px 0" data-lab="peg">PEG 성장률 실험 →</button>':'')}<button class="btn tertiary" id="bookmark-btn" style="margin-top:16px;width:100%">${db.bookmarks.includes(id)?'★ 즐겨찾기 해제':'☆ 즐겨찾기'}</button>`;
 $('memo-save').addEventListener('click',()=>{db.notes[id]=$('my-memo').value;const ok=save();$('memo-status').textContent=ok?'저장했어요 ✓':'브라우저 저장 제한: JSON 백업을 이용해 주세요.'});$('done').addEventListener('change',e=>{db.completed=e.target.checked?[...new Set([...db.completed,id])]:db.completed.filter(x=>x!==id);save();renderCards()});$('bookmark-btn').addEventListener('click',()=>{db.bookmarks=db.bookmarks.includes(id)?db.bookmarks.filter(x=>x!==id):[...db.bookmarks,id];save();openConcept(id)});
 if($('delete-concept'))$('delete-concept').addEventListener('click',()=>{if(confirm('직접 추가한 개념을 삭제할까요?')){db.concepts=db.concepts.filter(x=>x.id!==id);delete db.notes[id];db.completed=db.completed.filter(x=>x!==id);db.bookmarks=db.bookmarks.filter(x=>x!==id);save();switchView('library')}});
@@ -500,7 +558,7 @@ document.addEventListener('visibilitychange',()=>{if(document.visibilityState===
 .finlab-version-chip{position:fixed;bottom:78px;left:12px;z-index:1980;background:#ffffffec;color:#38516b;border:1px solid #d4ddec;border-radius:999px;padding:5px 9px;font-size:11px;box-shadow:0 3px 12px #192b4d12}
 @media(max-width:560px){.finlab-update-bar{width:calc(100vw - 24px);justify-content:space-between;bottom:72px}.finlab-version-chip{bottom:14px;left:12px}}
 </style>
-<span class="finlab-version-chip" id="finlab-version-chip">FINLAB v3.2.4</span>
+<span class="finlab-version-chip" id="finlab-version-chip">FINLAB v3.3.4</span>
 <div id="finlab-update-bar" class="finlab-update-bar" hidden role="status" aria-live="polite">
   <span id="finlab-update-message">🔄 새 버전이 있습니다.</span>
   <button id="finlab-update-apply" type="button">업데이트</button>
@@ -508,7 +566,7 @@ document.addEventListener('visibilitychange',()=>{if(document.visibilityState===
 </div>
 <script>
 (function(){
-const CURRENT_VERSION="3.2.4";
+const CURRENT_VERSION="3.3.4";
 const bar=document.getElementById("finlab-update-bar"),message=document.getElementById("finlab-update-message");
 const btn=document.getElementById("finlab-update-apply"),close=document.getElementById("finlab-update-dismiss");
 let latest=CURRENT_VERSION;
