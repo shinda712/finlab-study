@@ -1,5 +1,5 @@
 {
-  "version": "3.3.3",
-  "build": "2026-10-19-peg-lesson-experiment-link",
-  "releaseNotes": "PEG 전용 계산기 추가, 단계별 계산·해석·학습노트 연결"
+  "version": "3.3.4",
+  "build": "2026-10-21-spcx-earnings-study-and-charts",
+  "releaseNotes": "SPCX 실적 학습노트 추가 및 재무 표·막대그래프 표시 지원"
 }
